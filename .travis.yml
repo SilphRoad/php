@@ -8,6 +8,8 @@ env:
   - VERSION=7.2 VARIANT=xenial/apache
   - VERSION=7.2 VARIANT=xenial/fpm
   - VERSION=7.2 VARIANT=xenial/zts
+  - VERSION=7.0 VARIANT=xenial/cli
+  - VERSION=7.0 VARIANT=xenial/fpm
   - VERSION=5.6 VARIANT=xenial/cli
   - VERSION=5.6 VARIANT=xenial/apache
   - VERSION=5.6 VARIANT=xenial/fpm
