@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
 		$PHPIZE_DEPS \
 		ca-certificates \
 		curl \
+		libcurl4-openssl-dev \
 		libedit2 \
 		libsqlite3-0 \
 		libxml2 \
@@ -152,7 +153,6 @@ COPY docker-php-source /usr/local/bin/
 RUN set -xe \
 	&& buildDeps=" \
 		$PHP_EXTRA_BUILD_DEPS \
-		libcurl4-openssl-dev \
 		libedit-dev \
 		libsqlite3-dev \
 		libssl-dev \
@@ -168,10 +168,6 @@ RUN set -xe \
 	&& cd /usr/src/php \
 	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
 	&& debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
-# https://bugs.php.net/bug.php?id=74125
-	&& if [ ! -d /usr/include/curl ]; then \
-		ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
-	fi \
 	&& ./configure \
 		--build="$gnuArch" \
 		--with-config-file-path="$PHP_INI_DIR" \
@@ -203,12 +199,10 @@ RUN set -xe \
 	&& make clean \
 	&& cd / \
 	&& docker-php-source delete \
-	\
-	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $buildDeps \
-	\
-# https://github.com/docker-library/php/issues/443
+        # https://github.com/docker-library/php/issues/443
 	&& pecl update-channels \
-	&& rm -rf /tmp/pear ~/.pearrc
+	&& rm -rf /tmp/pear ~/.pearrc \
+	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $buildDeps
 
 COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
 
