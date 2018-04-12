@@ -125,13 +125,17 @@ for version in "${versions[@]}"; do
 
 	dockerfiles=()
 
-	for suite in stretch jessie alpine{3.7,3.6,3.4}; do
+	for suite in stretch jessie alpine{3.7,3.6,3.4} xenial; do
 		[ -d "$version/$suite" ] || continue
 		alpineVer="${suite#alpine}"
 
 		baseDockerfile=Dockerfile-debian.template
 		if [ "${suite#alpine}" != "$suite" ]; then
 			baseDockerfile=Dockerfile-alpine.template
+		fi
+
+		if [ "xenial" == "$suite" ]; then
+			baseDockerfile=Dockerfile-ubuntu.template
 		fi
 
 		for variant in cli apache fpm zts; do
@@ -178,6 +182,7 @@ for version in "${versions[@]}"; do
 			# TODO always add slim once jessie is removed
 			sed -ri \
 				-e 's!%%DEBIAN_SUITE%%!'"${suite/stretch/stretch-slim}"'!' \
+				-e 's!%%UBUNTU_VERSION%%!'"${suite}"'!' \
 				-e 's!%%ALPINE_VERSION%%!'"$alpineVer"'!' \
 				"$version/$suite/$variant/Dockerfile"
 			dockerfiles+=( "$version/$suite/$variant/Dockerfile" )

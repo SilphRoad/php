@@ -12,6 +12,10 @@ env:
   - VERSION=7.2 VARIANT=alpine3.6/cli
   - VERSION=7.2 VARIANT=alpine3.6/fpm
   - VERSION=7.2 VARIANT=alpine3.6/zts
+  - VERSION=7.2 VARIANT=xenial/cli
+  - VERSION=7.2 VARIANT=xenial/apache
+  - VERSION=7.2 VARIANT=xenial/fpm
+  - VERSION=7.2 VARIANT=xenial/zts
   - VERSION=7.1 VARIANT=jessie/cli
   - VERSION=7.1 VARIANT=jessie/apache
   - VERSION=7.1 VARIANT=jessie/fpm
@@ -33,6 +37,7 @@ env:
   - VERSION=5.6 VARIANT=alpine3.4/cli
   - VERSION=5.6 VARIANT=alpine3.4/fpm
   - VERSION=5.6 VARIANT=alpine3.4/zts
+  - VERSION=5.6 VARIANT=xenial/fpm
 
 install:
   - git clone https://github.com/docker-library/official-images.git ~/official-images
@@ -41,11 +46,11 @@ before_script:
   - env | sort
   - cd "$VERSION/$VARIANT"
   - SUBVARIANT="${VARIANT#*/}"
-  - image="php:${VERSION}-${SUBVARIANT}-${VARIANT%/*}"
+  - image="silph/php:${VERSION}-${SUBVARIANT}-${VARIANT%/*}"
 
 script:
   - travis_retry docker build -t "$image" .
-  - ~/official-images/test/run.sh "$image"
+#  - ~/official-images/test/run.sh "$image"
 
 after_script:
   - docker images
