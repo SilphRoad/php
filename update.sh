@@ -219,5 +219,5 @@ for version in "${versions[@]}"; do
 	travisEnv="$newTravisEnv$travisEnv"
 done
 
-travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
+travis="$(awk -v 'RS=\n\n' '$1 == "matrix:" { $0 = "matrix:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
 echo "$travis" > .travis.yml

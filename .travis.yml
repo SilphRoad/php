@@ -1,7 +1,9 @@
 language: bash
 services: docker
-
 env:
+  global:
+    secure: f38COTw6L2bTyEW4RBRhzzEbUlD2FUuUXOZoesBb5LcXBK4P4Yr+3Mcwr/5CWl4UwJ03bdWcy/ChOhUwQW+S0fZ/9YqaJ4OuX0tiKwA3rftzvBGGTpuNPqzYBIRxYdQ4ujq29pkNuByRvxDnX91D5706hPmjRBaQ8qBImyKFDEBacxuvjsrJ8n0iWujqpCPIuYVTPTLmpkKRUGK2r6kcFe/4VjcQMsnubWJ0GviFY/0VzuQcR6Nz80unDF3nK87QjChj6ig/3Bo3SpASeh04KtQXRKP/X4I7Ha4BN9h/lKiheSKUSx6CqyLhjF3um8MUolIdXdbBgcG0KBxgHNmwYo9/gFpEOQo67bXU71MJ16A24n6QTJ2aUAphoLceB/DzhzpcYGfK04ESMK1oPlZZx0YyqAQXl752vChWhrsaJwCSVTnpRQN1We3qEPnb2zZm51ZbWPmJGowzp4nG/1Mke8b+FBnkGFyBVohephcmPWfGdQydDsUwhcmkhw09TIrkOhQH56uhdeW7zE8uPtQsq90KNjFyh/9Gral7Hhh5mteIjWnaYYun9N1oNBDvhb6Sj/7Wmc1LxQoTJUFfPBKi0qqbYoSjptIyWcfU2fdcVziS6UB9OVSF+PSkKRL1bBbLuLq7ua2ECTD7HjHNnL3PgC7HKDTzZ5NnmIrQTZNr6fs=
+  matrix:
   - VERSION=7.2 VARIANT=stretch/cli
   - VERSION=7.2 VARIANT=stretch/apache
   - VERSION=7.2 VARIANT=stretch/fpm
@@ -38,21 +40,16 @@ env:
   - VERSION=5.6 VARIANT=alpine3.4/fpm
   - VERSION=5.6 VARIANT=alpine3.4/zts
   - VERSION=5.6 VARIANT=xenial/fpm
-
 install:
-  - git clone https://github.com/docker-library/official-images.git ~/official-images
-
+- git clone https://github.com/docker-library/official-images.git ~/official-images
 before_script:
-  - env | sort
-  - cd "$VERSION/$VARIANT"
-  - SUBVARIANT="${VARIANT#*/}"
-  - image="silph/php:${VERSION}-${SUBVARIANT}-${VARIANT%/*}"
-
+- env | sort
+- cd "$VERSION/$VARIANT"
+- SUBVARIANT="${VARIANT#*/}"
+- image="silph/php:${VERSION}-${SUBVARIANT}-${VARIANT%/*}"
 script:
-  - travis_retry docker build -t "$image" .
-#  - ~/official-images/test/run.sh "$image"
-
+- travis_retry docker build -t "$image" .
 after_script:
-  - docker images
-
-# vim:set et ts=2 sw=2:
+- docker images
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+- docker push "$image"
