@@ -125,7 +125,7 @@ for version in "${versions[@]}"; do
 
 	dockerfiles=()
 
-	for suite in stretch jessie alpine{3.7,3.6,3.4} xenial; do
+	for suite in stretch jessie alpine{3.7,3.6,3.4} xenial bionic; do
 		[ -d "$version/$suite" ] || continue
 		alpineVer="${suite#alpine}"
 
@@ -134,7 +134,7 @@ for version in "${versions[@]}"; do
 			baseDockerfile=Dockerfile-alpine.template
 		fi
 
-		if [ "xenial" == "$suite" ]; then
+		if [ "xenial" == "$suite" ] || [ "bionic" == "$suite" ]; then
 			baseDockerfile=Dockerfile-ubuntu.template
 		fi
 
